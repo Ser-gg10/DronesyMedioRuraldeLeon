@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drones: Tecnología en el aire</title>
+
+<style>
+
+body {
+    background: #1a1a2e;
+    font-family: Arial, sans-serif;
+    color: #e0e0e0;
+    line-height: 1.6;
+    margin: 10%
+}
+
+header {
+    text-align: center;
+    background: linear-gradient(90deg, #0ff, #00bfff);
+    color: #0f1626;
+    padding: 40px 20px;
+    border-radius: 20px;
+    margin: 20px auto;
+    max-width: 1000px;
+    box-shadow: 0 5px 15px rgba(0,255,255,0.3);
+}
+header h1 img { width: 250px; border-radius: 15px; }
+header p { font-size: 1.3em; margin: 15px 0; }
+header img.drone-gif { width: 320px; border-radius: 10px; margin-top: 20px; }
+header a { color: #ff4dff; text-decoration: underline; font-weight: bold; }
+
+section {
+    background: #0f1626;
+    margin: 25px auto;
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 1000px;
+    box-shadow: 0 5px 15px rgba(0,255,255,0.1);
+    transition: all 0.5s ease;
+    opacity: 0;
+    transform: translateY(30px);
+}
+section.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+details summary {
+    font-size: 1.5em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 10px;
+    outline: none;
+    color: #00ffff;
+}
+details p {
+    margin: 10px 0;
+}
+details img {
+    border-radius: 10px;
+    margin-top: 15px;
+    max-width: 100%;
+    height: auto;
+}
+
+.slider-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    margin-top: 20px;
+    padding-bottom: 10px;
+    gap: 15px;
+}
+.slider-container::-webkit-scrollbar {
+    height: 8px;
+}
+.slider-container::-webkit-scrollbar-thumb {
+    background: #00ffff;
+    border-radius: 4px;
+}
+
+.drone-card {
+    flex: 0 0 auto;
+    width: 220px;
+    background: #1a1a2e;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(0,255,255,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+.drone-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0,255,255,0.3);
+}
+.drone-card img {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+.drone-card h3 { margin-bottom: 6px; font-size: 1.2em; color: #00ffff; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+table, th, td {
+    border: 1px solid #00ffff;
+}
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #00bfff;
+    color: #0f1626;
+}
+
+</style></head>
+<body>
+
+<header>
+    <h1><img src="Imagenes/titulo.gif" alt="Título"></h1>
+    <p>Explora el fascinante mundo de los drones</p>
+    <p><a href="index1.html">Web concienciación riqueza rural de León desde el aire</a></p>
+    <img src="Imagenes/gifinicio.gif" alt="Drone animado" class="drone-gif">
+</header>
+
+<section>
+    <details>
+        <summary>¿Qué es un drone?</summary>
+        <p>Un drone es un vehículo aéreo no tripulado que se puede controlar de manera remota o programar para que vuele de manera autónoma.</p>
+        <img src="Imagenes/drone.png" alt="Drone volando">
+        <p><a href="https://es.wikipedia.org/wiki/Veh%C3%ADculo_a%C3%A9reo_no_tripulado" target="_blank">Más información en Wikipedia</a></p>
+    </details>
+</section>
+
+<section> 
+  <details open> 
+    <summary>Drones más comerciales</summary>
+    <div class="slider-container">
+     <div class="drone-card" data-drone="DJI Neo">
+      <img src="Imagenes/Drones/djineo.png" alt="DJI Neo"> 
+        <h3>DJI Neo</h3> 
+        <p>Drone ligero con gran estabilidad, buena cámara y vuelo autónomo, ideal para principiantes.</p> 
+     </div> 
+     <div class="drone-card" data-drone="DJI Mini"> 
+      <img src="Imagenes/Drones/djimini2.png" alt="DJI Mini"> 
+        <h3>DJI Mini</h3> 
+        <p>Barato, compacto, fácil de transportar y con funciones inteligentes de vuelo.</p> 
+     </div> 
+     <div class="drone-card" data-drone="DJI Mini 2"> 
+      <img src="Imagenes/Drones/djimini2.png" alt="DJI Mini 2"> 
+        <h3>DJI Mini 2</h3>
+        <p>Fácil de transportar, gran autonomía y señal, buena cámara y funciones inteligentes.</p> 
+     </div>
+     <div class="drone-card" data-drone="DJI Mini 3">
+      <img src="Imagenes/Drones/djimini3.png" alt="DJI Mini 3">
+        <h3>DJI Mini 3</h3> 
+        <p>Ligero, gran autonomía, compacto, vuelo inteligente, y más variedad de tomas.</p> 
+     </div> 
+     <div class="drone-card" data-drone="DJI Mini 4 pro"> 
+      <img src="Imagenes/Drones/djimini4.png" alt=DJI Mini 4 pro"> 
+        <h3>DJI Mini 4 pro</h3>
+        <p>Fácil de transportar, gran autonomía y señal, cámara de calidad óptima y funciones inteligentes nuevas que permiten tomas impresionantes.</p> 
+     </div> 
+     <div class="drone-card" data-drone="DJI Air 3S">
+      <img src="Imagenes/Drones/djiair3s.png" alt="DJI Air 3S"> 
+        <h3>DJI Air 3S</h3> 
+        <p>Drone profesional de gama media con cámara 4K y sensores de luz, gran distancia y gran autonomía.</p>         
+     </div> 
+     <div class="drone-card" data-drone="Parrot Anafi">
+      <img src="Imagenes/Drones/parrotanafi.png" alt="Parrot Anafi">
+        <h3>Parrot Anafi</h3>
+        <p>Plegable, con zoom digital y excelente rendimiento en grabaciones aéreas.</p> 
+     </div>
+</div> 
+<div id="drone-details"></div>
+ </details>
+   </section>
+
+<section>
+    <details>
+        <summary>Normativa vigente</summary>
+        <p>Todo el que quiera volar un dron debe de registrarse como operador en la web de la AESA, te darán un número de operador y tendrás que pegarlo en el dron.</p><p>Si tu dron pesa más de 250g debes hacer un curso de formación para pilotarlos. La edad mínima para pilotarlos es de 12 años para drones de menos de 250g y de 14 años para drones de menos de 900g. Para drones de 20kg o más es obligatorio un seguro antes de volar y la edad mínima es de 16 años.</p><p>En la categoría abierta puedes volar tu dron sin comunicarselo a AESA y sin ningún permiso, pero no puedes volar a más de 120m, hay zonas restringidas, y tu dron debe pesar menos de 4kg. Si no cumples o no quieres cumplir una de estas normas deberas notificar a AESA o comunidad autónoma cuando y dónde volaras tu drone.</p><p><a href="https://www.seguridadaerea.gob.es/es/ambitos/drones/normativa-de-uas-drones">Normativa AESA</a></p>
+    </details>
+</section>
+
+<script>
+
+document.querySelectorAll('section').forEach(sec=>{
+    const obs=new IntersectionObserver(e=>{
+        if(e[0].isIntersecting){sec.classList.add('visible');}
+    },{threshold:.2});
+    obs.observe(sec);
+});
+
+const droneDetails=document.getElementById("drone-details");
+
+const dronesData={
+'DJI Neo': { Peso: '135 g', Autonomía: '18 min', Cámara: '2.7K', Precio: '170€', Distancia: '50m (móvil) 6km (mando)' }, 'DJI Mini': { Peso: '249 g', Autonomía: '31 min', Cámara: '2.7K', Precio: '298€', Distancia: '2km', }, 'DJI Mini 2': { Peso: '249 g', Autonomía: '31 min', Cámara: '4k', Precio: '350€', Distancia: '10km', }, 'DJI Mini 3': { Peso: '249 g', Autonomía: '34 min', Cámara: '4k', Precio: '389€', Distancia: '18km', }, 'DJI Mini 4 pro': { Peso: '249 g', Autonomía: '38 min', Cámara: '4k HDR', Precio: '809€', Distancia: '20km', }, 'DJI Air 3S': { Peso: '570 g', Autonomía: '34 min', Cámara: '4K HDR', Precio: '900€', Distancia: '20km', }, 'Parrot Anafi': { Peso: '320 g', Autonomía: '25 min', Cámara: '4K HDR', Precio: '600€', Distancia: '4km' } };
+
+document.querySelectorAll(".drone-card").forEach(card=>{
+    card.onclick=()=>{
+        const d=card.dataset.drone;
+        const specs=dronesData[d];
+        let html=`<h3>Especificaciones de ${d}</h3><table>`;
+
+        for(const k in specs){
+            html+=`<tr><th>${k}</th><td>${specs[k]}</td></tr>`;
+        }
+        html+=`</table>`;
+        droneDetails.innerHTML=html;
+        droneDetails.scrollIntoView({behavior:"smooth"});
+    };
+});
+</script>
+
+</body>
+</html>

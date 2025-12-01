@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>León desde el aire</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+
+
+<style>
+    header {
+        width: 100%;
+        padding: 40px 20px;
+        background: #800000;
+        background-size: cover;
+        color: #FFD700;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        font-family: 'MedievalSharp', cursive;
+    }        
+    
+    header h1 {
+        margin: 0;
+        font-size: 3em;
+        letter-spacing: 1px;
+        font-family: 'MedievalSharp', cursive;
+    }
+
+    header p {
+        margin: 10px 0 0 0;
+        font-size: 1.2em;
+        line-height: 1.6;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        color: #FFD700;
+    }}
+    
+    body {
+        margin: 0;
+        display: flex;
+        height: 100vh;
+        background: #f8f2f0;
+    }
+
+
+    #container {
+        display: flex;
+        height: calc(100vh - 180px);    
+    }
+    
+    #panel {
+        width: 38%;
+        overflow-y: scroll;
+        padding: 20px;
+        background: rgba(255, 245, 220, 0.65);
+        backdrop-filter: blur(10px);
+        border-right: 2px solid rgba(255, 255, 255, 0.4);
+        scroll-behavior: smooth;
+        background-image: url("Imagenes/texturamenu.png");
+        background-size: cover;      
+        background-repeat: repeat;   
+        background-position: center;
+        color: #4b0000;              
+        font-weight: 500;
+    }
+    
+    #panel h2 {
+        color: #FFD700;
+        margin-top: 0;
+        font-family: 'MedievalSharp', cursive;
+    }
+    
+    #map {
+        width: 62%;
+        height: 100%;
+    }
+
+    details {
+        margin-bottom: 15px;
+        border: 1px solid #aaa;
+        border-radius: 6px;
+        background: #f9f9f9;
+        padding: 10px;
+        box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+    }
+
+    summary {
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        color: #800000;
+        font-family: 'MedievalSharp', cursive;
+    }
+
+    .contenido {
+        margin-top: 10px;
+        padding: 10px;
+        background: #fef5f5;
+        border-radius: 5px;
+    }
+
+    .foto-grande {
+        width: 100%;
+        height: 250px;
+        background: #ddd;
+        border: 1px solid #bbb;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 15px;
+        cursor: pointer;
+        overflow: hidden;
+        transition: transform 0.3s;
+    }
+
+
+    .foto-grande:hover {
+        transform: scale(1.03);
+    }
+
+    .foto-grande img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .texto {
+        min-height: 120px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        background: #fff;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .galeria {
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px dashed #aaa;
+        background: #f5f5f5;
+        border-radius: 5px;
+        display: none;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 5px;
+    }
+
+    .galeria img {
+        transition: transform 0.2s;
+        border-radius: 5px;
+        width: 100%;
+        cursor: pointer;
+    }
+
+
+    .galeria img:hover {
+        transform: scale(1.1);
+    }
+
+    .boton-galeria {
+        padding: 8px 12px;
+        background: #800000;
+        color: #FFD700;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .boton-galeria:hover {
+        background: #8A0020;
+    }
+
+ 
+    #lightbox {
+        display: none;
+        position: fixed;
+        top:0; left:0;
+        width:100%; height:100%;
+        background: rgba(0,0,0,0.9);
+        justify-content: center;
+        align-items: center;
+        z-index: 5000;
+        flex-direction: column;
+    }
+
+    #lightbox img {
+        max-width: 90%;
+        max-height: 80%;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+
+    #lightbox-controls {
+        color: white;
+        font-size: 24px;
+        display: flex;
+        justify-content: space-between;
+        width: 200px;
+    }
+
+    #lightbox-controls span {
+        cursor: pointer;
+        user-select: none;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>León desde el Aire</h1>
+    <p>El objetivo es dar visibilidad al medio rural para conocer la riqueza natural, cultural y humana de la provincia de León mediante imágenes aéreas y la importancia de protegerlo frente al abandono y el deterioro. Haz clic en los pueblos para ver su ubicación en el mapa, descubre sus paisajes a través de fotografías y conoce algunos datos sobre ellos.</p>
+</header>
+
+<div id="container">
+
+<div id="panel">
+    <h2>Comarcas y Pueblos</h2>
+</div>
+
+<div id="map"></div>
+
+<div id="lightbox" onclick="cerrarLightbox()">
+    <img id="lightbox-img" src="">
+    <div id="lightbox-controls">
+        <span onclick="prevImagen(event)">&#8592;</span>
+        <span onclick="nextImagen(event)">&#8594;</span>
+    </div>
+</div>
+
+<script>
+const lugares = [
+    ["Los Ancares","Candín",42.8167,-6.7281,"",[]],
+    ["Babia","Cabrillanes",42.9530,-6.1492,"",[]],
+    ["Boeza","Congosto",42.6178,-6.5200,"",[]],
+    ["Cistierna","Cistierna",42.80277778,-5.125277778,"",[]],
+    ["Coyanza","Villamañán",42.32166667,-5.582222222,"",[]],
+    ["Curueño","Ranedo de Curueño",42.863943,-5.391214,"",[]],
+    ["El Bierzo","Molinaseca",42.53805556,-6.519722222,"",[]],
+    ["El Condado","Vegas del Condado",42.68438889,-5.3645,"",[]],
+    ["El Páramo","Valdevimbre",42.42055556,-5.622222222,"",[]],
+    ["El Payuelo","Valdepolo",42.57611111,-5.226111111,"",[]],
+    ["Eslonza","Villacontilde",42.527570,-5.374296,"",[]],
+    ["Forniella","Faro",42.862705,-6.596377,"",[]],
+    ["Gordón","La Pola de Gordón",42.85472222,-5.67,"",[]],
+    ["La Cabrera","Truchas",42.2607687,-6.434993,"",[]],
+    ["La Cepeda","Castrillo de Cepeda",42.58425,-6.019725,"",[]],
+    ["La Ribera","Azadón",42.630583,-5.809565,"",[]],
+    ["La Sequeda","Matanza",42.392461,-6.045603,"",[]],
+    
+["La Sobarriba","Valdefresno",42.59361111,-5.491944444,"Valdefresno, en la comarca de La Sobarriba, 10 km al este de la ciudad de León y una altura de 875 msnm, es capital del municipio del mismo nombre, esta rodeado de páramos y campos de cultivo caracteísticos de esta comarca, la población del pueblo es reducida. El municipio cuenta con 2335 habitantes y una superficie de 102,5 km², lo que indica una baja densidad de población de unos 23 habitantes por km², aún así es buena noticia el crecimiento continuo de este municipio debido a su cercanía a León, en los años 90 su poblacíon cayó a mínimos (1558 hab) y desde ese momento no ha parado de crecer, aunque aún no se acerca a sus máximos históricos los años 40 y 50 (2900 hab). Este pueblo no tiene un origen claro, aunque se han encontrado restos líticos en la zona que indican presencia humana en la Sobarriba desde la prehistoria, más tarde la zona cayó en la influencia del Imperio Romano con la Legio VII Gémina haciéndose asentamientos y rutas, existen documentos antiguos que mencionan ya Valdefresno en la Edad Media.",["DJI_0463.JPG", "DJI_0462.JPG", "DJI_0464.JPG", "DJI_0465.JPG", "DJI_0466.JPG", "DJI_0467.JPG", "DJI_0468.JPG", "DJI_0469.JPG"]],
+
+    ["La Valdoncina","Sotico",42.529097,-5.552611,"",[]],
+    ["Valduerna","Riego de la Vega",42.38916667,-5.982222222,"",[]],
+    ["Laciana","Rioscuro",42.933779,-6.288462,"",[]],
+    ["Las Matas","Valdespino de Vaca",42.303215,-5.154434,"",[]],
+    ["Los Argüellos","Rodiezmo de la Tercia",42.937432,-5.685304,"",[]],
+    ["Los Oteros","Grulleros",42.5016666,-5.54833333,"",[]],
+    ["Luna","Sagüera de Luna",42.842171,-5.824655,"",[]],
+    ["Mansilla","Villomar",42.518764,-5.360350,"",[]],
+    ["Maragatería","Valdeviejas",42.461775,-6.078978,"",[]],
+    ["Omaña","La Omañuela",42.777858,-5.990015,"",[]],
+    ["Órbigo","Hospital de Órbigo",42.46111111,-5.884166667,"",[]],
+    ["Ordás","Selga de Ordás",42.754789,-5.791716,"",[]],
+    ["Porma","Rucayo",42.967434,-5.320586,"",[]],
+    ["Ribas del Sil","Palacios del Sil",42.87638889,-6.432777778,"",[]],
+    ["Sajambre","Soto de Sajambre",43.16281,-5.03543,"",[]],
+    ["Tierra de Almanza","Almanza",42.65888889,-5.035833333,"",[]],
+    ["Tierra de Campos","Codornillos",42.402536,-5.054043,"",[]],
+    ["Tierra de Cea","Bustillo de Cea",42.480589,-5.033048,"",[]],
+    ["Tierra de La Bañeza","Alcaidón de la Vega",42.340032,-5.878704,"",[]],
+    ["Tierra de La Reina","Riaño",42.97472222,-5.011944444,"",[]],
+    
+["Tierra de León","Garrafe de Torío",42.73277778,-5.523888889,"En la comarca de Tierras de León, donde está situada la capital de la provincia (León) y 16 km al norte de ella, encontramos Garrafe de Torío, un pueblo a orillas del río Torío  rodeado de tierras fértiles, prados, huertas y montes bajos; cuenta con fiestas populares, romerías y tradiciones muy características de los alrededores de la ciudad de León.Su altitud es de 920 msnm y es capital del municipio con el mismo nombre, el cual cuenta con 1640 habitantes y 125,3 km², lo que indica una densidad de población muy escasa, unos 13 hab/km², ciertos es que el municipio ha crecido notablemente desde los años 90 (1107 hab), lo cual es una buena noticia, aún así este municipio llegó a contar con 2482 habitantes en los años 50, lo que nos muestra la grave despoblación. El origen de este pueblo se remonta a antes de Roma ya que se han encontrado castros en los cerros del valle, al llegar los romanos los asentamientos se concentraron a orillas del río, el pueblo en sí ya aparece documentado en el siglo XV, en el 'Becerro de las presentaciones' de la Catedral de León.",["DJI_0431.JPG", "DJI_0452.jpg", "DJI_0441.jpg", "DJI_0440.jpg", "DJI_0433.jpg", "DJI_0460.jpg","DJI_0252.jpg","DJI_0249.jpg"]],
+
+    ["Tierra de Rueda","Gradafes",42.623500,-5.227719,"",[]],
+    ["Tierra del Esla","Fuentes de Carbajal",42.17722222,-5.446388889,"",[]],
+    ["Valcarce","Balboa",42.70638889,-6.923055556,"",[]],
+    ["Valdeburón","Maraña",43.04888889,-5.176944444,"",[]],
+    ["Valdejamuz","Quintanilla de Flórez",42.25489,-6.102554,"",[]],
+    ["Valdeón","Caín de Valdeón",43.213379,-4.905288,"",[]],
+    ["Valderia","Felechares de la Valderia",42.192979,-6.044046,"",[]],
+    ["Valdueza","Ferradillo",42.465633,-6.656353,"",[]],
+    ["Vega del Tuerto","Nistal",42.423211,-6.007015,"",[]]
+];
+
+const panel = document.getElementById("panel");
+
+let currentPueblo = null;
+let currentIndex = 0;
+
+lugares.forEach((lugar, i) => {
+    const [comarca, pueblo, lat, lon, descripcion, imagenes] = lugar;
+
+        let fotoHTML = imagenes.length > 0 ? `<img src="Imagenes/${pueblo}/${imagenes[0]}" alt="${pueblo}">` : "";
+
+    let galeriaHTML = imagenes.map((img, idx) => `<img src="Imagenes/${pueblo}/${img}" alt="${pueblo}" onclick="abrirLightboxPueblo('${pueblo}', ${idx}, event)">`).join("");
+
+    const html = `
+    <details onclick="centrar(${lat}, ${lon})">
+        <summary>${comarca} – ${pueblo}</summary>
+        <div class="contenido">
+            <div class="foto-grande" onclick="abrirLightboxPueblo('${pueblo}', 0, event)">
+                ${fotoHTML}
+            </div>
+
+            <div class="texto">
+                ${descripcion}
+            </div>
+
+            <button class="boton-galeria" onclick="toggleGaleria(${i}, event)">Ver imágenes del pueblo y su entorno</button>
+
+            <div class="galeria" id="galeria-${i}">
+                ${galeriaHTML}
+            </div>
+        </div>
+    </details>`;
+
+    panel.innerHTML += html;
+});
+
+var map = L.map('map').setView([42.6, -5.6], 8);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 18
+}).addTo(map);
+
+let marker;
+
+function centrar(lat, lon) {
+    map.setView([lat, lon], 12);
+    if (marker) map.removeLayer(marker);
+    marker = L.marker([lat, lon], { icon: leonIcon }).addTo(map);
+}
+
+function toggleGaleria(id, event) {
+    event.stopPropagation();
+    const gal = document.getElementById("galeria-" + id);
+    gal.style.display = gal.style.display === "block" ? "none" : "block";
+}
+
+const lightbox = document.getElementById("lightbox");
+const lightboxImg = document.getElementById("lightbox-img");
+
+function abrirLightboxPueblo(pueblo, index, event) {
+    event.stopPropagation();
+    currentPueblo = pueblo;
+    currentIndex = index;
+    mostrarImagen();
+    lightbox.style.display = "flex";
+}
+
+function mostrarImagen() {
+    const puebloObj = lugares.find(l => l[1] === currentPueblo);
+    if (!puebloObj || puebloObj[5].length === 0) return;
+    lightboxImg.src = `Imagenes/${currentPueblo}/${puebloObj[5][currentIndex]}`;
+}
+
+function cerrarLightbox() {
+    lightbox.style.display = "none";
+}
+
+const leonIcon = L.icon({
+    iconUrl: 'Imagenes/pinleon.png',
+
+    iconSize: [30, 30],  
+    iconAnchor: [15, 30],   
+});
+
+function prevImagen(event) {
+    event.stopPropagation();
+    const puebloObj = lugares.find(l => l[1] === currentPueblo);
+    if (!puebloObj || puebloObj[5].length === 0) return;
+    currentIndex = (currentIndex - 1 + puebloObj[5].length) % puebloObj[5].length;
+    mostrarImagen();
+}
+
+function nextImagen(event) {
+    event.stopPropagation();
+    const puebloObj = lugares.find(l => l[1] === currentPueblo);
+    if (!puebloObj || puebloObj[5].length === 0) return;
+    currentIndex = (currentIndex + 1) % puebloObj[5].length;
+    mostrarImagen();
+}
+</script>
+
+</body>
+</html>
+
+
+
